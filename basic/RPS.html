@@ -52,7 +52,34 @@
       $computer.style.backgroundSize = 'auto 200px';  //리셋되니까 적어줘야한다
     }
     // 시간 간격을 최대한 맞추려면 setInterval, 상관없으면 setTimeout
-    setInterval(changeComputerHand, 50);
+    let intervalId = setInterval(changeComputerHand, 50);
+
+    /*버그: clickButton를 n번(n>=2) 연속 호출한다면, 인터벌 1번,2번,..,n번(얘만 intervalId)
+      그 다음에 버튼을 클릭하면 n번만 취소됨 
+      [해결방안]
+      1. setTimeout안에 clearInterval를 해줌으로써 문제해결
+      setTimeout(() => {
+        clearInterval(intervalId);
+        intervalId = setInterval(changeComputerHand, 50);
+      }, 1000);
+
+      2. flag 변수를 통해 버튼 이벤트를 막는다 */
+    let clickable = true;
+    const clickButton = () => {
+      if (clickable) {
+	      clearInterval(intervalId);
+        clickable = false;
+	      // 점수 계산 및 화면 표시
+	      // 1초 뒤에 손을 다시 움직인다
+	      setTimeout(() => {
+	        clickable = true;
+	        intervalId = setInterval(changeComputerHand, 50);
+	      }, 1000);
+      }
+    }
+    $rock.addEventListener('click', clickButton);
+    $scissors.addEventListener('click', clickButton);
+    $paper.addEventListener('click', clickButton);
   </script>
 </body>
 
