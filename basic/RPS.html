@@ -39,22 +39,20 @@
       paper: '-441px'  //보
     }
 
-    let coord = '0';
-    setInterval(() => {
-      if (coord === rpsX.scissors) {  //가위면
-        coord = rpsX.rock;
-        $computer.style.background = `url(${IMG_URL}) ${rpsX.rock} 0`;
-        $computer.style.backgroundSize = 'auto 200px';  //리셋되니까 적어줘야한다
-      } else if (coord === rpsX.rock) { //바위
-        coord = rpsX.paper;
-        $computer.style.background = `url(${IMG_URL}) ${rpsX.paper} 0`;
-        $computer.style.backgroundSize = 'auto 200px';
-      } else if (coord === rpsX.paper) {
-        coord = rpsX.scissors;
-        $computer.style.background = `url(${IMG_URL}) ${rpsX.scissors} 0`;
-        $computer.style.backgroundSize = 'auto 200px';
+    let computerChoice = 'scissors';
+    const changeComputerHand = () => {
+      if (computerChoice === 'scissors') {  //가위면
+        computerChoice = 'rock';
+      } else if (computerChoice === 'rock') { //바위
+        computerChoice = 'paper';
+      } else if (computerChoice === 'paper') {
+        computerChoice = 'scissors';
       }
-    }, 50);
+      $computer.style.background = `url(${IMG_URL}) ${rpsX[computerChoice]} 0`;
+      $computer.style.backgroundSize = 'auto 200px';  //리셋되니까 적어줘야한다
+    }
+    // 시간 간격을 최대한 맞추려면 setInterval, 상관없으면 setTimeout
+    setInterval(changeComputerHand, 50);
   </script>
 </body>
 
