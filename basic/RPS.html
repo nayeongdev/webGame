@@ -54,6 +54,12 @@
     // 시간 간격을 최대한 맞추려면 setInterval, 상관없으면 setTimeout
     let intervalId = setInterval(changeComputerHand, 50);
 
+    const scoreTable = {
+      rock: 0,
+      scissors: 1,
+      paper: -1
+    }
+
     /*버그: clickButton를 n번(n>=2) 연속 호출한다면, 인터벌 1번,2번,..,n번(얘만 intervalId)
       그 다음에 버튼을 클릭하면 n번만 취소됨 
       [해결방안]
@@ -65,15 +71,38 @@
 
       2. flag 변수를 통해 버튼 이벤트를 막는다 */
     let clickable = true;
+    let score = 0;
     const clickButton = () => {
       if (clickable) {
 	      clearInterval(intervalId);
         clickable = false;
+
 	      // 점수 계산 및 화면 표시
+        const myChoice = event.target.textContent === '가위'
+          ? 'scissors'
+          : event.target.textContent === '바위'
+            ? 'rock'
+            : 'paper';
+        const myScore = scoreTable[myChoice];
+        const computerScore = scoreTable[computerChoice];
+        const diff = myScore - computerScore;
+
+        let message;
+        //값들의 차가 2,-1이면 승리조건, -2,1은 패배조건, 0은 무승부
+        if ([2,-1].includes(diff)) {  // diff === 2 || diff === -1
+          score += 1;          
+          message = '승리';
+        } else if ([-2,1].includes(diff)) {
+          score -= 1;
+          message = '패배';
+        } else {
+          message = '무승부';
+        }
+        $score.textContent = `${message}  총: ${score}점`;
 	      // 1초 뒤에 손을 다시 움직인다
 	      setTimeout(() => {
+          intervalId = setInterval(changeComputerHand, 50);
 	        clickable = true;
-	        intervalId = setInterval(changeComputerHand, 50);
 	      }, 1000);
       }
     }
