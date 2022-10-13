@@ -32,11 +32,14 @@
 </head>
 
 <body>
-  <div id="screen" class="waiting">click to start</div>
+  <div id="screen" class="waiting">Click to Start</div>
   <div id="result"></div>
   <script>
     const $screen = document.querySelector('#screen');
     const $result = document.querySelector('#result');
+
+    let startTime;
+    let endTime;
 
     $screen.addEventListener('click', (event) => {
       if (event.target.classList.contains('waiting')) { //대기 화면
@@ -45,7 +48,8 @@
         $screen.textContent = 'Click when it turns green'
 
         setTimeout(() => {
-          $screen.classList.remove('reday');
+          startTime = new Date(); // 첫 시간 재기
+          $screen.classList.remove('ready');
           $screen.classList.add('now');
           $screen.textContent = 'Click!!'
         }, Math.floor(Math.random() * 1000) + 2000);  // 2~3초 사이(2000~3000 사이 수)
@@ -53,7 +57,11 @@
       } else if (event.target.classList.contains('ready')) {  // 준비 화면
 
       } else if (event.target.classList.contains('now')) {  // 클릭 화면
-
+        endTime = new Date(); // 끝시간 재기
+        $result.textContent = `${endTime - startTime}ms`;
+        $screen.classList.remove('now');
+        $screen.classList.add('waiting');
+        $screen.textContent = 'Click to Start';
       }
     })
   </script>
