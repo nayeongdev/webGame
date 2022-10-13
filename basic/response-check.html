@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>반응속도 테스트</title>
+  <style>
+    #screen {
+      width: 300px;
+      height: 200px;
+      text-align: center;
+      font-weight: bold;
+      color: white;
+      /* 사용자가 텍스트를 선택할 수 있는지 지정 */
+      user-select: none;
+    }
+
+    #screen.waiting {
+      background-color: blue;
+    }
+
+    #screen.ready {
+      background-color: red;
+    }
+
+    #screen.now {
+      background-color: green;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="screen" class="waiting">click to start</div>
+  <div id="result"></div>
+  <script>
+    const $screen = document.querySelector('#screen');
+    const $result = document.querySelector('#result');
+
+    $screen.addEventListener('click', (event) => {
+      if (event.target.classList.contains('waiting')) { //대기 화면
+        $screen.classList.remove('waiting');  // 클래스 제거
+        $screen.classList.add('ready'); // 클래스 추가
+        $screen.textContent = 'Click when it turns green'
+
+        setTimeout(() => {
+          $screen.classList.remove('reday');
+          $screen.classList.add('now');
+          $screen.textContent = 'Click!!'
+        }, Math.floor(Math.random() * 1000) + 2000);  // 2~3초 사이(2000~3000 사이 수)
+        // 0 <= x < 1  → 0 <= x*1000 < 1000 → 2000 <= x*1000+2000 < 3000 
+      } else if (event.target.classList.contains('ready')) {  // 준비 화면
+
+      } else if (event.target.classList.contains('now')) {  // 클릭 화면
+
+      }
+    })
+  </script>
+</body>
+
+</html>
