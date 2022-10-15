@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>반응속도 테스트</title>
+  <style>
+    #screen {
+      width: 300px;
+      height: 200px;
+      text-align: center;
+      font-weight: bold;
+      color: white;
+      /* 사용자가 텍스트를 선택할 수 있는지 지정 */
+      user-select: none;
+    }
+
+    #screen.waiting {
+      background-color: blue;
+    }
+
+    #screen.ready {
+      background-color: red;
+    }
+
+    #screen.now {
+      background-color: green;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="screen" class="waiting">Click to Start</div>
+  <div id="result"></div>
+  <script>
+    const $screen = document.querySelector('#screen');
+    const $result = document.querySelector('#result');
+
+    let startTime;
+    let endTime;
+    const records = [];
+    let timeoutId;
+
+    $screen.addEventListener('click', (event) => {
+      if (event.target.classList.contains('waiting')) { //대기 화면
+        $screen.classList.remove('waiting');  // 클래스 제거
+        $screen.classList.add('ready'); // 클래스 추가
+        $screen.textContent = 'Click when it turns green'
+
+        timeoutId = setTimeout(() => {
+          startTime = new Date(); // 첫 시간 재기
+          $screen.classList.remove('ready');
+          $screen.classList.add('now');
+          $screen.textContent = 'Click!!'
+        }, Math.floor(Math.random() * 1000) + 2000);  // 2~3초 사이(2000~3000 사이 수)
+        // 0 <= x < 1  → 0 <= x*1000 < 1000 → 2000 <= x*1000+2000 < 3000 
+      } else if (event.target.classList.contains('ready')) {  // 준비 화면
+        clearTimeout(timeoutId);
+        $screen.classList.remove('ready');
+        $screen.classList.add('waiting');
+        $screen.textContent = 'Too hasty! Click to Restart';
+      } else if (event.target.classList.contains('now')) {  // 클릭 화면
+        endTime = new Date(); // 끝시간 재기
+        const current = endTime - startTime;
+        records.push(current);
+        const average = records.reduce((a, c) => a + c) / records.length;
+        $result.textContent = `현재 : ${current}ms  평균 : ${average}ms`;
+        startTime = null;
+        endTime = null;
+        $screen.classList.remove('now');
+        $screen.classList.add('waiting');
+        $screen.textContent = 'Click to Start';
+      }
+    })
+  </script>
+</body>
+
+</html>
