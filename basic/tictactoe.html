@@ -16,12 +16,15 @@
       border: 1px solid black;
       width: 60px;
       height: 60px;
+      font-size: 40px;
+      font-weight: bold;
       text-align: center;
     }
   </style>
 </head>
 <body>
   <script>
+    let turn = 'O';
     const data = [];
     for (let i = 0; i < 3; i++) {
       data.push([]);
@@ -31,6 +34,18 @@
       const $tr = document.createElement('tr');
       for (let i = 0; i < 3; i++) {
         const $td = document.createElement('td');
+        $td.addEventListener('click', (event) => {
+          // 칸에 글자있나?
+          if (event.target.textContent) return; // 클릭을 하면 안되는 상황
+          event.target.textContent = turn;
+          console.log(event.target.textContent);
+          // 차례 넘기기
+          if (turn === 'O') {
+            turn = 'X';
+          } else if (turn === 'X') {
+            turn = 'O';
+          }
+        })
         $tr.append($td);
       }
       $table.append($tr);
