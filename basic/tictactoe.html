@@ -24,33 +24,39 @@
 </head>
 <body>
   <script>
-    let turn = 'O';
-    const data = [];
-    for (let i = 0; i < 3; i++) {
-      data.push([]);
-    }
+    const {body} = document;
+    // const body = document.body;
     const $table = document.createElement('table');
+    const $result = document.createElement('div');
+    let turn = 'O';
+    const rows = [];
+    
+    const callback = (event) => {
+      if (event.target.textContent) { // 칸이 이미 채워져있나?
+        console.log('Not Empty');
+        return;
+      }
+      //빈칸이면
+      event.target.textContent = turn;
+      console.log(event.target.textContent);
+      // 차례 넘기기
+      turn = turn === 'X' ? 'O' : 'X';
+    }
+
     for (let i = 0; i < 3; i++) {
       const $tr = document.createElement('tr');
-      for (let i = 0; i < 3; i++) {
+      const cells = [];
+      for (let j = 0; j < 3; j++) {
         const $td = document.createElement('td');
-        $td.addEventListener('click', (event) => {
-          // 칸에 글자있나?
-          if (event.target.textContent) return; // 클릭을 하면 안되는 상황
-          event.target.textContent = turn;
-          console.log(event.target.textContent);
-          // 차례 넘기기
-          if (turn === 'O') {
-            turn = 'X';
-          } else if (turn === 'X') {
-            turn = 'O';
-          }
-        })
+        cells.push($td);
         $tr.append($td);
       }
+      rows.push(cells);
       $table.append($tr);
+      $table.addEventListener('click', callback)
     }
     document.body.append($table);
+    document.body.append($result);
    </script>
 </body>
 </html>
