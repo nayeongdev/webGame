@@ -34,16 +34,9 @@
     let turn = 'O';
 
     const checkWinner = (target) => {
-      let rowIndex;
-      let callIndex;
-      rows.forEach((row, ri) => {
-        row.forEach((cell, ci) => {
-          if (cell === target) {
-            rowIndex = ri;
-            cellIndex = ci;
-          }
-        })
-      })
+      const rowIndex = target.parentNode.rowIndex;
+      const cellIndex = target.cellIndex;
+      
       //세 칸 다 채워졌나?
       let hasWinner = false;
       //가로줄 검사
@@ -88,18 +81,13 @@
         $table.removeEventListener('click', callback);
         return;
       }
-      // 승자 없으면
-      let draw = true;
-      rows.forEach((row) => {
-        row.forEach((cell)=>{
-          if (!cell.textContent) draw = false;
-        })
-      })
+      // 승자 없으면 무승부 검사
+      const draw = rows.flat().every((cell)=> cell.textContent);
       if (draw) {
         $result.textContent = "무승부";
         return;
       }
-      //차례 넘기기
+      //승부가 안났으면 차례 넘기기
       turn = turn === 'X' ? 'O' : 'X';
     }
 
