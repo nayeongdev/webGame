@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -22,15 +23,56 @@
     }
   </style>
 </head>
+
 <body>
   <script>
-    const {body} = document;
+    const { body } = document;
     // const body = document.body;
     const $table = document.createElement('table');
     const $result = document.createElement('div');
-    let turn = 'O';
     const rows = [];
-    
+    let turn = 'O';
+
+    const checkWinner = (target) => {
+      let rowIndex;
+      let callIndex;
+      rows.forEach((row, ri) => {
+        row.forEach((cell, ci) => {
+          if (cell === target) {
+            rowIndex = ri;
+            cellIndex = ci;
+          }
+        })
+      })
+      //세 칸 다 채워졌나?
+      let hasWinner = false;
+      //가로줄 검사
+      if (
+        rows[rowIndex][0].textContent === turn &&
+        rows[rowIndex][1].textContent === turn &&
+        rows[rowIndex][2].textContent === turn
+      ) hasWinner = true;
+      //세로줄 검사
+      if (
+        rows[0][rowIndex].textContent === turn &&
+        rows[1][rowIndex].textContent === turn &&
+        rows[2][rowIndex].textContent === turn
+      ) hasWinner = true;
+      //대각선 검사
+      if (
+        rows[0][0].textContent === turn &&
+        rows[1][1].textContent === turn &&
+        rows[2][2].textContent === turn
+      ) hasWinner = true;
+      if (
+        rows[0][2].textContent === turn &&
+        rows[1][1].textContent === turn &&
+        rows[2][0].textContent === turn
+      ) hasWinner = true;
+
+      return hasWinner;
+    }
+
     const callback = (event) => {
       if (event.target.textContent) { // 칸이 이미 채워져있나?
         console.log('Not Empty');
@@ -39,7 +81,25 @@
       //빈칸이면
       event.target.textContent = turn;
       console.log(event.target.textContent);
-      // 차례 넘기기
+      const hasWinner = checkWinner(event.target);
+      // 승자가 있으면
+      if (hasWinner) {
+        $result.textContent = `${turn}님이 승리`;
+        $table.removeEventListener('click', callback);
+        return;
+      }
+      // 승자 없으면
+      let draw = true;
+      rows.forEach((row) => {
+        row.forEach((cell)=>{
+          if (!cell.textContent) draw = false;
+        })
+      })
+      if (draw) {
+        $result.textContent = "무승부";
+        return;
+      }
+      //차례 넘기기
       turn = turn === 'X' ? 'O' : 'X';
     }
 
@@ -57,6 +117,7 @@
     }
     document.body.append($table);
     document.body.append($result);
-   </script>
+  </script>
 </body>
+
 </html>
