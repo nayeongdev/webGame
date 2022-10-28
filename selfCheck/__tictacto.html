@@ -66,14 +66,7 @@
       return hasWinner;
     }
 
-    const callback = (event) => {
-      if (event.target.textContent) { // 칸이 이미 채워져있나?
-        console.log('Not Empty');
-        return;
-      }
-      //빈칸이면
-      event.target.textContent = turn;
-      console.log(event.target.textContent);
+    const checkWinnerAndDraw = (target) => {
       const hasWinner = checkWinner(event.target);
       // 승자가 있으면
       if (hasWinner) {
@@ -89,6 +82,25 @@
       }
       //승부가 안났으면 차례 넘기기
       turn = turn === 'X' ? 'O' : 'X';
+    }
+
+    const callback = (event) => {
+      if (event.target.textContent) { // 칸이 이미 채워져있나?
+        console.log('Not Empty');
+        return;
+      }
+      //빈칸이면
+      event.target.textContent = turn;
+      console.log(event.target.textContent);
+      checkWinnerAndDraw(event.target);
+      
+      if (turn === 'X') {
+        // 빈칸에 랜덤으로 값 넣기
+        const emptyCells = rows.flat().filter((v) => !v.textContent);
+        const randomCells = emptyCells[Math.floor(Math.random()*emptyCells.length)];
+        randomCells.textContent = 'X';
+        checkWinnerAndDraw(event.target);
+      }
     }
 
     for (let i = 0; i < 3; i++) {
