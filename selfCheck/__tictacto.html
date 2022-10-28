@@ -67,7 +67,7 @@
     }
 
     const checkWinnerAndDraw = (target) => {
-      const hasWinner = checkWinner(event.target);
+      const hasWinner = checkWinner(target);
       // 승자가 있으면
       if (hasWinner) {
         $result.textContent = `${turn}님이 승리`;
@@ -84,7 +84,12 @@
       turn = turn === 'X' ? 'O' : 'X';
     }
 
+    let clickable = true;
     const callback = (event) => {
+      if (!clickable) {
+        return;
+      }
+
       if (event.target.textContent) { // 칸이 이미 채워져있나?
         console.log('Not Empty');
         return;
@@ -98,8 +103,12 @@
         // 빈칸에 랜덤으로 값 넣기
         const emptyCells = rows.flat().filter((v) => !v.textContent);
         const randomCells = emptyCells[Math.floor(Math.random()*emptyCells.length)];
-        randomCells.textContent = 'X';
-        checkWinnerAndDraw(event.target);
+        clickable = false;
+        setTimeout(() => {
+          randomCells.textContent = 'X';
+          checkWinnerAndDraw(event.target);
+          clickable = true;
+        }, 500);
       }
     }
 
