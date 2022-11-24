@@ -222,9 +222,7 @@
 
     class Monster extends Unit {
       constructor(game, name, hp, att, xp) {
-      }
-      attack(target) {
-        super.attack(target);
+        super(game,name,hp,att,xp);
       }
     }
 
