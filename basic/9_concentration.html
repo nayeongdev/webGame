@@ -65,6 +65,7 @@
     let shuffled = [];
     let clicked = [];
     let completed = [];
+    let clickable = false;
 
     function shuffle() {  // 피셔-예이츠 셔플
       for (let i = 0; colorCopy.length > 0; i++) {
@@ -90,6 +91,10 @@
     }
 
     function onClickCard() {
+      // [카드 뒤집을때/뒤집힌 카드/한 개의 카드가 중복적으로] 클릭되는 버그 막기
+      if (!clickable || completed.includes(this) || clicked[0] === this) {
+        return;
+      }
       this.classList.toggle('flipped');
       clicked.push(this);
       if (clicked.length !== 2) {
@@ -112,10 +117,12 @@
         return;
       }
       // 두개의 카드가 다르면
+      clickable = false;
       setTimeout(() => {
         clicked[0].classList.remove('flipped');
         clicked[1].classList.remove('flipped');
         clicked = [];
+        clickable = true;
       }, 500);
     }
     function startGame() {
@@ -137,7 +144,8 @@
       setTimeout(() => {
         document.querySelectorAll('.card').forEach((card) => {
           card.classList.remove('flipped');
-        })
+        });
+        clickable = true;
       }, 5000);
     }
 
@@ -146,9 +154,10 @@
       colorCopy = colors.concat(colors);
       shuffled = [];
       completed = [];
+      clickable = false;
       startGame();
     }
-    
+
     startGame();
   </script>
 </body>
